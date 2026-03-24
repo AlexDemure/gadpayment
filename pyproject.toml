@@ -1,0 +1,25 @@
+[project]
+name = "payment"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "alembic>=1.18.4",
+    "asyncpg>=0.31.0",
+    "fastapi>=0.135.2",
+    "faststream[rabbit]>=0.6.7",
+    "httpx>=0.28.1",
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.13.1",
+    "sqlalchemy>=2.0.48",
+    "uvicorn>=0.42.0",
+]
+
+[dependency-groups]
+dev = [
+    "isort>=8.0.1",
+    "mypy>=1.19.1",
+    "ruff>=0.15.7",
+    "typer>=0.24.1",
+]

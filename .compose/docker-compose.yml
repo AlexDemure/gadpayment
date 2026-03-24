@@ -1,0 +1,54 @@
+version: "3.8"
+
+volumes:
+  .volumes:
+
+services:
+  server:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: server
+    hostname: server
+    restart: always
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      POSTGRES_HOST: postgresql+asyncpg://postgres:postgres@postgres:5432/database
+      RABBIT_HOST: amqp://guest:guest@rabbitmq:5672/
+      API_KEY: "test"
+      WEBHOOK: false
+    ports:
+      - "8000:8000"
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    hostname: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../.volumes/pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: database
+    command: [ "postgres", "-c", "log_statement=all" ]
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ../.volumes/rabbitmq:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
